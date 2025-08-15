@@ -1,5 +1,6 @@
 import pygame
 import math
+from random import randint
 
 pygame.init()
 
@@ -11,7 +12,7 @@ clock = pygame.time.Clock()
 
 player_img = pygame.transform.scale(pygame.image.load("Images/player.png"), (64, 64)).convert_alpha()
 background_img = pygame.transform.scale(pygame.image.load("Images/bg_test.png"), (1800, 1800)).convert_alpha()
-obstacle_img = pygame.transform.scale(pygame.image.load("Images/obstacle.png"), (32, 32)).convert_alpha()
+obstacle_img = pygame.transform.scale(pygame.image.load("Images/obstacle.png"), (64, 64)).convert_alpha()
 
 
 def move_environment(environment: list, direction: str):
@@ -30,33 +31,36 @@ class Player:
         self.mv_down = False
         self.mv_right = False
         self.mv_left = False
+        self.rect = image.get_rect()
+        self.colliding = False
+        
 
 
     def move(self):
         if self.check_diagonal():
             self.velocity = self.diag_vel
-        if self.mv_up:
+        if self.mv_up and not self.check_collision("up"):
             if self.y >= 200:
                 self.y -= self.velocity
             elif background.y <= 0:
                 move_environment(all_environment, "up")
             elif self.y - self.velocity > 0:
                 self.y -= self.velocity
-        elif self.mv_down:
+        elif self.mv_down and not self.check_collision("down"):
             if self.y <= 500:
                 self.y += self.velocity
             elif background.y + background_img.get_height() > height:
                 move_environment(all_environment, "down")
             elif self.y + self.velocity + player_img.get_height() < height:
                 self.y += self.velocity
-        if self.mv_right:
+        if self.mv_right and  not self.check_collision("right"):
             if self.x <= 500:
                 self.x += self.velocity
             elif background.x + background_img.get_width() > width:
                 move_environment(all_environment, "right")
             elif self.x + self.velocity + player_img.get_width() < width:
                 self.x += self.velocity
-        elif self.mv_left:
+        elif self.mv_left and not self.check_collision("left"):
             if self.x >= 200:
                 self.x -= self.velocity
             elif background.x < 0:
@@ -64,6 +68,8 @@ class Player:
             elif self.x - self.velocity > 0:
                 self.x -= self.velocity
         self.velocity = self.default_speed
+        self.colliding = False
+        self.rect.topleft = (self.x, self.y)
 
 
     def draw(self):
@@ -74,13 +80,32 @@ class Player:
             if self.mv_left or self.mv_right:
                 return True
         return False
+    
+    def check_collision(self, direction: str):
+        direction_to_coords = {
+            "up": (0, -self.velocity),
+            "down": (0, self.velocity), 
+            "right": (self.velocity, 0),
+            "left": (-self.velocity, 0)
+                }
+        temp_coords = (self.rect.topleft[0] + direction_to_coords[direction][0], self.rect.topleft[1] + direction_to_coords[direction][1])
+        self.rect.topleft = temp_coords
+        for object in all_environment:
+            if object.collide:
+                if self.rect.colliderect(object.rect):
+                    return True
+        return False
+                    
 
 
 class Environment:
-    def __init__(self, x, y, image):
+    def __init__(self, x, y, image, collide=True):
         self.x = x
         self.y = y
         self.image = image
+        self.collide = collide
+        self.rect = image.get_rect()
+        self.rect.topleft = (self.x, self.y)
 
     def draw(self):
         screen.blit(self.image, (self.x, self.y))
@@ -94,13 +119,15 @@ class Environment:
             self.x -= player.velocity
         elif direction == "left":
             self.x += player.velocity
+        self.rect.topleft = (self.x, self.y)
 
 
-player = Player(300, 300, 7, player_img)
-background = Environment(-500, -500, background_img)
+
+player = Player(300, 300, 5, player_img)
+background = Environment(-500, -500, background_img, False)
 ob1 = Environment(400, 400, obstacle_img)
 ob2 = Environment(1000, 700, obstacle_img)
-ob3 = Environment(-200, -100, obstacle_img)
+ob3 = Environment(-100, -100, obstacle_img)
 
 all_environment = [background, ob1, ob2, ob3]
 
@@ -128,6 +155,8 @@ while True:
                 player.mv_left = False
 
     screen.fill((0, 0, 0))
+
+    
     
     for object in all_environment:
         object.draw()
@@ -135,6 +164,7 @@ while True:
     player.draw()
     player.move()
 
+
     pygame.display.flip()
 
-    clock.tick(60)
+    clock.tick(90)
