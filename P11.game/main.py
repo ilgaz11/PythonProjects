@@ -38,6 +38,7 @@ class Player:
         self.mv_left = False
         self.rect = image.get_rect()
         self.colliding = False
+        self.phase_count = 0
         
 
 
@@ -126,21 +127,64 @@ class Environment:
             self.x += player.velocity
         self.rect.topleft = (self.x, self.y)
 
+class PhaseOrb:
+    def __init__(self, x, y, image, collide=False):
+        self.x = x
+        self.y = y
+        self.image = image
+        self.collide = collide
+        self.rect = image.get_rect()
+        self.rect.topleft = (self.x, self.y)
+        self.colliding = False
+
+    def draw(self):
+        screen.blit(self.image, (self.x, self.y))
+
+    def move(self, direction):
+        self.check_pick_up()
+        if direction == "up":
+            self.y += player.velocity
+        elif direction == "down":
+            self.y -= player.velocity
+        elif direction == "right":
+            self.x -= player.velocity
+        elif direction == "left":
+            self.x += player.velocity
+        self.rect.topleft = (self.x, self.y)
+
+    def check_pick_up(self):
+        if self.rect.colliderect(player.rect):
+            if self.colliding == False:
+                print("Picked up!")
+                self.change_coords()
+                self.rect.topleft = (self.x, self.y)
+                player.phase_count += 1
+                self.colliding = True
+                print(player.phase_count)
+        else: 
+            self.colliding = False
+
+    def change_coords(self):
+        top_left_x = round(background.x + (250 - self.image.get_width())/2)
+        top_left_y = round(background.y + (250 - self.image.get_width())/2)
+        self.x = randrange(top_left_x, top_left_x + 250*7, 250)
+        self.y = randrange(top_left_y, top_left_y + 250*6, 250)
 
 
-player = Player(330, 330, 5, player_img)
+player = Player(330, 330, 8, player_img)
 background = Environment(-500, -500, background_img, False)
-ob1 = Environment(random_coords(), random_coords(), obstacle_img)
-ob2 = Environment(random_coords(), random_coords(), obstacle_img)
-ob3 = Environment(random_coords(), random_coords(), obstacle_img)
-ob4 = Environment(-250, -250, obstacle_img)
-ob5 = Environment(0, -250, obstacle_img)
-ob6 = Environment(500, -250, obstacle_img)
+# ob1 = Environment(random_coords(), random_coords(), obstacle_img)
+# ob2 = Environment(random_coords(), random_coords(), obstacle_img)
+# ob3 = Environment(random_coords(), random_coords(), obstacle_img)
+# ob4 = Environment(-250, -250, obstacle_img)
+# ob5 = Environment(0, -250, obstacle_img)
+# ob6 = Environment(500, -250, obstacle_img)
+phase_orb = PhaseOrb(randrange(93, 593, 250), randrange(93, 593, 250), obstacle_img)
 
-all_environment = [background]
+all_environment = [background, phase_orb]
 
 img_choice = [vert_img, hor_img]
-for index in range(58):
+for index in range(50):
     object = Environment(randrange(-500, 1500, 250), randrange(-500, 1500, 250), choice(img_choice))
     all_environment.append(object)
 
