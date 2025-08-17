@@ -11,10 +11,10 @@ pygame.display.set_caption("GAME")
 clock = pygame.time.Clock()
 
 player_img = pygame.transform.scale(pygame.image.load("Images/player.png"), (48, 48)).convert_alpha()
-background_img = pygame.transform.scale(pygame.image.load("Images/bg_test.png"), (2000, 1750)).convert_alpha()
+background_img = pygame.transform.scale(pygame.image.load("Images/bg1.png"), (2000, 1750)).convert_alpha()
 obstacle_img = pygame.transform.scale(pygame.image.load("Images/obstacle.png"), (64, 64)).convert_alpha()
-vert_img = pygame.transform.scale(obstacle_img, (48, 250)).convert_alpha()
-hor_img = pygame.transform.scale(obstacle_img, (250, 48)).convert_alpha()
+vert_img = pygame.image.load("Images/vert_wall.png").convert_alpha()
+hor_img = pygame.image.load("Images/hor_wall.png").convert_alpha()
 
 
 def move_environment(environment: list, direction: str):
@@ -39,40 +39,57 @@ class Player:
         self.rect = image.get_rect()
         self.colliding = False
         self.phase_count = 0
+        self.phase_key = False
         
 
 
     def move(self):
         if self.check_diagonal():
             self.velocity = self.diag_vel
-        if self.mv_up and not self.check_collision("up"):
-            if self.y >= 320:
-                self.y -= self.velocity
-            elif background.y <= 0:
-                move_environment(all_environment, "up")
-            elif self.y - self.velocity > 0:
-                self.y -= self.velocity
-        elif self.mv_down and not self.check_collision("down"):
-            if self.y <= 380:
-                self.y += self.velocity
-            elif background.y + background_img.get_height() > height:
-                move_environment(all_environment, "down")
-            elif self.y + self.velocity + player_img.get_height() < height:
-                self.y += self.velocity
-        if self.mv_right and  not self.check_collision("right"):
-            if self.x <= 380:
-                self.x += self.velocity
-            elif background.x + background_img.get_width() > width:
-                move_environment(all_environment, "right")
-            elif self.x + self.velocity + player_img.get_width() < width:
-                self.x += self.velocity
-        elif self.mv_left and not self.check_collision("left"):
-            if self.x >= 320:
-                self.x -= self.velocity
-            elif background.x < 0:
-                move_environment(all_environment, "left")   
-            elif self.x - self.velocity > 0:
-                self.x -= self.velocity
+        if self.mv_up:
+            if not self.check_collision("up"):
+                if self.y >= 320:
+                    self.y -= self.velocity
+                elif background.y <= 0:
+                    move_environment(all_environment, "up")
+                elif self.y - self.velocity > 0:
+                    self.y -= self.velocity
+            else:
+                self.phase("up")
+
+        elif self.mv_down:
+            if not self.check_collision("down"):
+                if self.y <= 380:
+                    self.y += self.velocity
+                elif background.y + background_img.get_height() > height:
+                    move_environment(all_environment, "down")
+                elif self.y + self.velocity + player_img.get_height() < height:
+                    self.y += self.velocity
+            else:
+                self.phase("down")
+
+        if self.mv_right:
+            if not self.check_collision("right"):
+                if self.x <= 380:
+                    self.x += self.velocity
+                elif background.x + background_img.get_width() > width:
+                    move_environment(all_environment, "right")
+                elif self.x + self.velocity + player_img.get_width() < width:
+                    self.x += self.velocity
+            else:
+                self.phase("right")
+
+        elif self.mv_left:
+            if not self.check_collision("left"):
+                if self.x >= 320:
+                    self.x -= self.velocity
+                elif background.x < 0:
+                    move_environment(all_environment, "left")   
+                elif self.x - self.velocity > 0:
+                    self.x -= self.velocity
+            else:
+                self.phase("left")
+        phase_orb.check_pick_up()
         self.velocity = self.default_speed
         self.colliding = False
         self.rect.topleft = (self.x, self.y)
@@ -101,6 +118,19 @@ class Player:
                 if self.rect.colliderect(object.rect):
                     return True
         return False
+    
+    def phase(self, direction):
+        if self.phase_count > 0 and self.phase_key:
+            if direction == "up":
+                self.y -= 120
+            elif direction == "down":
+                self.y += 120
+            elif direction == "right":
+                self.x += 120
+            elif direction == "left":
+                self.x -= 120
+            self.phase_count -= 1
+            self.phase_key = False
                     
 
 
@@ -141,7 +171,6 @@ class PhaseOrb:
         screen.blit(self.image, (self.x, self.y))
 
     def move(self, direction):
-        self.check_pick_up()
         if direction == "up":
             self.y += player.velocity
         elif direction == "down":
@@ -185,7 +214,7 @@ all_environment = [background, phase_orb]
 
 img_choice = [vert_img, hor_img]
 for index in range(50):
-    object = Environment(randrange(-500, 1500, 250), randrange(-500, 1500, 250), choice(img_choice))
+    object = Environment(randrange(-520, 1480, 250), randrange(-524, 1476, 250), choice(img_choice))
     all_environment.append(object)
 
 
@@ -203,6 +232,8 @@ while True:
                 player.mv_right = True
             elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 player.mv_left = True
+            if event.key == pygame.K_r:
+                player.phase_key = True
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 player.mv_up = False
@@ -212,6 +243,8 @@ while True:
                 player.mv_right = False
             elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 player.mv_left = False
+            if event.key == pygame.K_r:
+                player.phase_key = False
 
     screen.fill((0, 0, 0))
 
