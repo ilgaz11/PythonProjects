@@ -11,10 +11,13 @@ pygame.display.set_caption("GAME")
 clock = pygame.time.Clock()
 
 player_img = pygame.transform.scale(pygame.image.load("Images/player.png"), (48, 48)).convert_alpha()
-background_img = pygame.transform.scale(pygame.image.load("Images/bg1.png"), (2000, 1750)).convert_alpha()
+background_img = pygame.transform.scale(pygame.image.load("Images/bg3.png"), (2500, 2250)).convert_alpha()
 obstacle_img = pygame.transform.scale(pygame.image.load("Images/obstacle.png"), (64, 64)).convert_alpha()
+orb_img = pygame.image.load("Images/phase_orb.png").convert_alpha()
 vert_img = pygame.image.load("Images/vert_wall.png").convert_alpha()
 hor_img = pygame.image.load("Images/hor_wall.png").convert_alpha()
+anim_vert = pygame.image.load("Images/anim_test.png").convert_alpha()
+
 
 
 def move_environment(environment: list, direction: str):
@@ -89,7 +92,8 @@ class Player:
                     self.x -= self.velocity
             else:
                 self.phase("left")
-        phase_orb.check_pick_up()
+        po1.check_pick_up()
+        po2.check_pick_up()
         self.velocity = self.default_speed
         self.colliding = False
         self.rect.topleft = (self.x, self.y)
@@ -120,16 +124,24 @@ class Player:
         return False
     
     def phase(self, direction):
+        success = False
         if self.phase_count > 0 and self.phase_key:
-            if direction == "up":
+            if direction == "up" and self.y > 150:
+                screen.blit(anim_vert, (self.x, self.y))
                 self.y -= 120
-            elif direction == "down":
+                success = True
+            elif direction == "down" and self.y < height - 150:
+                screen.blit(anim_vert, (self.x, self.y))
                 self.y += 120
-            elif direction == "right":
+                success = True
+            elif direction == "right" and self.x < width - 150:
                 self.x += 120
-            elif direction == "left":
+                success = True
+            elif direction == "left" and self.x > 150:
                 self.x -= 120
-            self.phase_count -= 1
+                success = True
+            if success:
+                self.phase_count -= 1
             self.phase_key = False
                     
 
@@ -184,7 +196,6 @@ class PhaseOrb:
     def check_pick_up(self):
         if self.rect.colliderect(player.rect):
             if self.colliding == False:
-                print("Picked up!")
                 self.change_coords()
                 self.rect.topleft = (self.x, self.y)
                 player.phase_count += 1
@@ -196,25 +207,21 @@ class PhaseOrb:
     def change_coords(self):
         top_left_x = round(background.x + (250 - self.image.get_width())/2)
         top_left_y = round(background.y + (250 - self.image.get_width())/2)
-        self.x = randrange(top_left_x, top_left_x + 250*7, 250)
-        self.y = randrange(top_left_y, top_left_y + 250*6, 250)
+        self.x = randrange(top_left_x, top_left_x + 250*9, 250)
+        self.y = randrange(top_left_y, top_left_y + 250*8, 250)
 
 
-player = Player(330, 330, 8, player_img)
+player = Player(330, 330, 6, player_img)
 background = Environment(-500, -500, background_img, False)
-# ob1 = Environment(random_coords(), random_coords(), obstacle_img)
-# ob2 = Environment(random_coords(), random_coords(), obstacle_img)
-# ob3 = Environment(random_coords(), random_coords(), obstacle_img)
-# ob4 = Environment(-250, -250, obstacle_img)
-# ob5 = Environment(0, -250, obstacle_img)
-# ob6 = Environment(500, -250, obstacle_img)
-phase_orb = PhaseOrb(randrange(93, 593, 250), randrange(93, 593, 250), obstacle_img)
 
-all_environment = [background, phase_orb]
+po1 = PhaseOrb(randrange(93, 593, 250), randrange(93, 593, 250), orb_img)
+po2 = PhaseOrb(randrange(93, 593, 250), randrange(93, 593, 250), orb_img)
+
+all_environment = [background, po1, po2]
 
 img_choice = [vert_img, hor_img]
-for index in range(50):
-    object = Environment(randrange(-520, 1480, 250), randrange(-524, 1476, 250), choice(img_choice))
+for index in range(80):
+    object = Environment(randrange(-520, 1980, 250), randrange(-516, 1984, 250), choice(img_choice))
     all_environment.append(object)
 
 
