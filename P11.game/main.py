@@ -16,7 +16,8 @@ obstacle_img = pygame.transform.scale(pygame.image.load("Images/obstacle.png"), 
 orb_img = pygame.image.load("Images/phase_orb.png").convert_alpha()
 vert_img = pygame.image.load("Images/vert_wall.png").convert_alpha()
 hor_img = pygame.image.load("Images/hor_wall.png").convert_alpha()
-anim_vert = pygame.image.load("Images/anim_test.png").convert_alpha()
+anim_vert = pygame.image.load("Images/vert_phase.png").convert_alpha()
+anim_hor = pygame.image.load("Images/hor_phase.png").convert_alpha()
 
 
 
@@ -41,10 +42,8 @@ class Player:
         self.mv_left = False
         self.rect = image.get_rect()
         self.colliding = False
-        self.phase_count = 0
+        self.phase_count = 1
         self.phase_key = False
-        
-
 
     def move(self):
         if self.check_diagonal():
@@ -135,16 +134,17 @@ class Player:
                 self.y += 120
                 success = True
             elif direction == "right" and self.x < width - 150:
+                screen.blit(anim_hor, (self.x, self.y))
                 self.x += 120
                 success = True
             elif direction == "left" and self.x > 150:
+                screen.blit(anim_hor, (self.x, self.y))
                 self.x -= 120
                 success = True
             if success:
                 self.phase_count -= 1
             self.phase_key = False
                     
-
 
 class Environment:
     def __init__(self, x, y, image, collide=True):
@@ -221,9 +221,8 @@ all_environment = [background, po1, po2]
 
 img_choice = [vert_img, hor_img]
 for index in range(80):
-    object = Environment(randrange(-520, 1980, 250), randrange(-516, 1984, 250), choice(img_choice))
+    object = Environment(randrange(-520, 1980, 250), randrange(-514, 1982, 250), choice(img_choice))
     all_environment.append(object)
-
 
 
 while True:
@@ -239,7 +238,7 @@ while True:
                 player.mv_right = True
             elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 player.mv_left = True
-            if event.key == pygame.K_r:
+            if event.key == pygame.K_SPACE:
                 player.phase_key = True
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_UP or event.key == pygame.K_w:
@@ -250,19 +249,17 @@ while True:
                 player.mv_right = False
             elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 player.mv_left = False
-            if event.key == pygame.K_r:
+            if event.key == pygame.K_SPACE:
                 player.phase_key = False
 
     screen.fill((0, 0, 0))
 
-    
     
     for object in all_environment:
         object.draw()
 
     player.draw()
     player.move()
-
 
     pygame.display.flip()
 
