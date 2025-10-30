@@ -1,12 +1,27 @@
-#encode a message and give encoding an id to be able to decode later
-#decode a message with given id
 
-#
+
+"""
+Description: 
+	the message encoder receives a message and an id. The encoder outputs an encrypted version of the message
+	that can be reverted back to the original message with the id. 
+
+Restrictions:
+- cannot use integers in initial message
+- cannot use special symbols #+@$% in initial message
+
+Suggestions:
+- the message can be written with or without spaces 
+(This is a message or ThisIsAMessage both work)
+- the id should not be 0-3, as these are easier to decrpyt
+
+ 
+
+"""
 
 from string import ascii_lowercase
 
-letters = ascii_lowercase
-numbers = '0123456789'
+LETTERS = ascii_lowercase
+NUMBERS = '0123456789'
 punctuation = ".,'!?"
 coded_punctuation = '#+@$%'
 
@@ -15,38 +30,51 @@ def caesar_cipher(message: str, jump: int):
 	new_msg = ''
 	for item in message:
 		#check if item is a letter
-		if item in letters:
+		if item in LETTERS:
 			#get index of the letter and create new index 
-			index = letters.index(item)
+			index = LETTERS.index(item)
 			new_index = index + jump
 			#check that the new index is valid
-			while new_index > len(letters) - 1:
+			while new_index > len(LETTERS) - 1:
 				new_index -= 26
 			#add new letter to coded message
-			new_msg += letters[new_index]
-		#if item is not a letter, add a space
+			new_msg += LETTERS[new_index]
+		elif item == ' ':
+			new_msg += '/'
+		elif item == '/':
+			new_msg += ' '
+		#if item is not a letter or space, add item
 		else:
 			new_msg += item
 
 	return new_msg
 
+
 def caesar_decipher(message: str, jump: int):
+	#make sure jump is a valid number for alphabet
 	while jump > 26:
 		jump -= 26
+	#undo caesar cipher
 	return caesar_cipher(message, 26 - jump)
 
-#aol zbu pz zbuuf
 def number_coder(message: str):
 	index = 0
 	new_msg = ''
+	#iterate thorugh every item 
 	for item in message:
-		if item in letters:
+		#check if item is a letter
+		if item in LETTERS:
+			#check if index is even
 			if index % 2 == 0:
-				i = letters.index(item)
+				#replace the letter by its index representation in alphabet
+				i = LETTERS.index(item)
 				new_msg += str(i)
 			else:
+				#if index is odd, add letter without changes
 				new_msg += str(item)
+			#update index
 			index += 1
+		#if item is not a letter, add item
 		else:
 			new_msg += str(item)
 	return new_msg
@@ -59,12 +87,12 @@ def number_decoder(message: str):
 		if double_digits_index:
 			double_digits_index = False
 			continue
-		if item in numbers:
+		if item in NUMBERS:
 			letter_index = item
-			if index < len(message) - 1 and message[index + 1] in numbers:
+			if index < len(message) - 1 and message[index + 1] in NUMBERS:
 				letter_index = message[index : index+ 2]
 				double_digits_index = True
-			letter = letters[int(letter_index)]
+			letter = LETTERS[int(letter_index)]
 			decoded_msg += letter
 		else:
 			decoded_msg += item
@@ -73,7 +101,9 @@ def number_decoder(message: str):
 def punctuation_coder(message: str, punct1: str, punct2: str):
 	new_msg = ''
 	for item in message:
+		#check if item is in first punctuation list
 		if item in punct1:
+			#convert item into coded or decoded punctuation
 			index = punct1.index(item)
 			new_msg += punct2[index]
 		else:
@@ -93,32 +123,45 @@ def word_jumbler(message: str):
 	new_message = " ".join(jumbled_list)
 	return new_message
 
-def word_unjumbler(message: str):
-	return word_jumbler(message)
+def convert_a(message, coded=True):
+	converted = 'xaz'
+	words_list = message.split(' ')
+	for index, value in enumerate(words_list):
+		if value == 'a' and coded:
+			words_list[index] = converted
+		elif value == converted and not coded:
+			words_list[index] = 'a'
+	new_message = ' '.join(words_list)
+	return new_message
+	
+	
 
 
 def message_encoder(message: str, id: str):
 	c_jump = id
-	coded0 = punctuation_coder(message, punctuation, coded_punctuation)
-	coded1 = caesar_cipher(coded0, c_jump)
-	coded2 = number_coder(coded1)
-	return coded2
+	coded0 = convert_a(message)
+	coded1 = word_jumbler(coded0)
+	coded2 = punctuation_coder(coded1, punctuation, coded_punctuation)
+	coded3 = caesar_cipher(coded2, c_jump)
+	coded4 = number_coder(coded3)
+	return coded4
 
 def message_decoder(encrypted_message: str, id: str):
 	c_jump = id
 	decoded1 = number_decoder(encrypted_message)
 	decoded2 = caesar_decipher(decoded1, c_jump)
 	decoded3 = punctuation_coder(decoded2, coded_punctuation, punctuation)
-	return decoded3
+	decoded4 = word_jumbler(decoded3)
+	decoded5 = convert_a(decoded4, False)
+	return decoded5
 
 
 
 
-#coded = message_encoder("So this will be a test. Let's see how the coder manages, with this! It seems to be doing pretty well, at least so far, right?", 7)
-#print(coded)
+coded = message_encoder("So let's write a bigger paragraph and see how the encoder manages. I have not seen the copy module before, thats pretty cool. Ok that should be long enough to run a test now!", 11)
+print(coded)
 
-#decoded = message_decoder(coded, 7)
-#print(decoded)
+decoded = message_decoder(coded, 11)
+print(decoded)
 
-print(word_jumbler('These are all odd words'))
-print(word_unjumbler('esehT era lla ddo sdrow'))
+
