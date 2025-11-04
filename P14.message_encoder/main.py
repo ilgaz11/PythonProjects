@@ -123,7 +123,7 @@ def word_jumbler(message: str):
 	new_message = " ".join(jumbled_list)
 	return new_message
 
-def convert_a(message, coded=True):
+def convert_a(message: str, coded=True):
 	converted = 'xaz'
 	words_list = message.split(' ')
 	for index, value in enumerate(words_list):
@@ -157,11 +157,15 @@ def message_decoder(encrypted_message: str, id: str):
 
 
 
+#examples
+if __name__ == '__main__':
 
-coded = message_encoder("So let's write a bigger paragraph and see how the encoder manages. I have not seen the copy module before, thats pretty cool. Ok that should be long enough to run a test now!", 11)
-print(coded)
+	coded = message_encoder("How had she been so wrong? All her instincts and intuition completely failed her for the first time in her life. She had so heavily relied on both when making decisions up until this moment and she felt a seismic shift take place in her self-confidence. If she could be so completely wrong about something so simple as this, how could she make decisions about really important things taking place in her life? She wasn't sure what she should do next.", 11)
+	print(coded)
 
-decoded = message_decoder(coded, 11)
-print(decoded)
+	print()
+
+	decoded = message_decoder(coded, 11)
+	print(decoded)
 
 
