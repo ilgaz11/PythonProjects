@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>School Home Page</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+
+    <body>
+        <p>Enter Student ID</p>
+        <form action="/submit" method="POST">
+            <input type="text" placeholder="ID" name="student-id">
+            <button type="submit">Submit</button>
+        </form>
+        <button class="choice-button js-student-button">Student</button>
+        <button class="choice-button">Staff</button>
+
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </body>
+</html>
