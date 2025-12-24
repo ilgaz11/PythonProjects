@@ -147,7 +147,7 @@ for i, st in enumerate(students):
 		st.enroll_curriculum("CE-SEM-2")
 	elif i == 3:
 		st.enroll_class('MATH-262')
-		print(st.grades)
+		#print(st.grades)
 
 
 #sch.show_courses()

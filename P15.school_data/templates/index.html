@@ -6,13 +6,16 @@
     </head>
 
     <body>
-        <p>Enter Student ID</p>
-        <form action="/submit" method="POST">
-            <input type="text" placeholder="ID" name="student-id">
-            <button type="submit">Submit</button>
-        </form>
+
+    
+        <div class="header">
+        <h1>School</h1>
+        </div>
+    
+
         <button class="choice-button js-student-button">Student</button>
-        <button class="choice-button">Staff</button>
+        <button class="choice-button js-staff-button">Staff</button>
+        <div class="js-student-login"></div>
 
         <script src="{{ url_for('static', filename='script.js') }}"></script>
     </body>

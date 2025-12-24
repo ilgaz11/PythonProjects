@@ -9,7 +9,10 @@ def home():
 
 @app.route("/submit", methods=["POST"])
 def submit():
-    student_id = int(request.form["student-id"])
+    try:
+        student_id = int(request.form["student-id"])
+    except ValueError:
+        return render_template("index.html")
     student = find_id(student_id)
     if not student:
         return render_template("index.html")
