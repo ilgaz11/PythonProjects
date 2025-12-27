@@ -88,7 +88,8 @@ class Student:
 
 				if code not in self.grades:
 					self.grades[code] = []
-				return
+				return True
+		return False
 			
 
 	def enroll_to_department(self, dep: str):
@@ -182,6 +183,7 @@ def find_id(id: int):
 
 if __name__ == "__main__":
 	main()
+
 			
 
 

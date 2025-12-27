@@ -4,12 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Menu</title>
+    <link rel="stylesheet" href=" {{ url_for('static', filename='styles.css')}} ">
 </head>
 <body>
-    <h2>Student Menu</h2>
-    <pre>NAME:  {{ name }}</pre>
-    <pre>ID:  {{ id }}</pre>
-    <pre>AGE:  {{ age }}</pre>
-    <button onclick="window.location.href='/'">Go Back</button>
+    <div class="header">
+        <h1>School</h1>
+    </div>
+    <div class="st-menu-head">
+        <h2>Student Menu</h2>
+    </div>
+
+    <div class="st-info">
+
+        <h3 class="st-info-head">Student Information</h3>
+        <table class="student-table">
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>{{ name }}</td>
+                </tr>
+                <tr>
+                    <td>Age</td>
+                    <td>{{ age }}</td>
+                </tr>
+                <tr>
+                    <td>Student ID</td>
+                    <td>{{ id }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="course-table">
+
+            <div>
+                <h3 class="st-info-head">Grades</h3>
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <td>Course</td>
+                            <td>Credits</td>
+                            <td>Grade</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for code, grade in grades.items() %}
+                        <tr>
+                            <td>{{ code }}</td>
+                            <td></td>
+                            <td>{{ grade }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <h3 class="st-info-head">Add Course</h3>
+                <form action="/course" method="POST">
+                    <input class="input-box" type="text" placeholder="Course Code" name="course-code">
+                    <button class="submit-button" type="submit">Add</button>
+                    <p class="not-found-info"></p>
+                </form>
+            </div>
+        </div>
+        
+        <button class="back-button" onclick="window.location.href='/'">Go Back</button>
+
+        <!--
+        <h3 class="st-info-head">Student Information</h3>
+        <pre>NAME:  {{ name }}</pre>
+        <pre>ID:  {{ id }}</pre>
+        <pre>AGE:  {{ age }}</pre>
+
+        -->
+
+    </div>
+
 </body>
 </html>
