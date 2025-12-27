@@ -15,7 +15,7 @@ def submit():
     if request.method == "POST":
         print("2")
         try:
-            student_id = int(request.form.get("student-id"))
+            student_id = request.form.get("student-id")
         except ValueError:
             return render_template("index.html")
         student = find_id(student_id)
@@ -36,11 +36,9 @@ def submit():
 @app.route("/course", methods=["POST"])
 def add_course():
     course_code = request.form.get("course-code")
-    st_id = int(session["id"])
+    st_id = session["id"]
     st = find_id(st_id)
-    enrolled = st.enroll_class(course_code)
-    if not enrolled:
-        print("Course code not found")
+    st.enroll_class(course_code)
     # print(session["data"])
     # session["data"][3] = st.grades
     # print(session["data"])

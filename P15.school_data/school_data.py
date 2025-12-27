@@ -16,11 +16,11 @@ def initialize_school(filename: str, lst1: list, lst2: list, dict1: dict):
 			
 
 			if s_info[0] == "Student":
-				name, id, age = s_info[1], int(s_info[2]), s_info[3]
+				name, id, age = s_info[1].strip(), s_info[2].strip(), s_info[3].strip()
 				s = Student(name, id, age)
 				lst1.append(s)
 			elif s_info[0] == "Course":
-				code, credits = s_info[1], s_info[2]
+				code, credits = s_info[1].strip(), s_info[2].strip()
 				c = Course(code, credits)
 				if c not in lst2:
 					lst2.append(c)
@@ -55,7 +55,7 @@ class School:
 
 
 class Student:
-	def __init__(self, name: str, id: int, age: int, school=None):
+	def __init__(self, name: str, id: str, age: int, school=None):
 		self.name = name
 		self.id = id
 		self.age = age
@@ -172,7 +172,7 @@ def main():
 		print(student)
 
 
-def find_id(id: int):
+def find_id(id: str):
 	for st in student_list:
 		if st.id == id:
 			return st
