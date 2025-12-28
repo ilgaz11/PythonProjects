@@ -57,10 +57,12 @@
                 </table>
             </div>
             <div>
-                <h3 class="st-info-head">Add Course</h3>
+                <h3 class="st-info-head">Add / Drop Course</h3>
+                <button class="ad-button add-selected js-add-button selected-button">Add</button>
+                <button class="ad-button js-drop-button">Drop</button>
                 <form action="/course" method="POST">
-                    <input class="input-box" type="text" placeholder="Course Code" name="course-code">
-                    <button class="submit-button" type="submit">Add</button>
+                    <input class="input-box js-course-input" type="text" placeholder="Course Code" name="course-code">
+                    <button class="submit-button js-course-submit add-selected" type="submit" value="add" name="sub-button">Add</button>
                     <p class="not-found-info"></p>
                 </form>
             </div>
@@ -78,5 +80,6 @@
 
     </div>
 
+    <script src="{{ url_for('static', filename='student.js')}}"></script>
 </body>
 </html>

@@ -38,20 +38,13 @@ body {
     cursor: pointer;
 }
 
-.selected-button {
-    background-color: grey;
-    font-weight: 500;
-    color: white;
-    
-}
-
 .input-box {
     height: 25px;
     font-size: 18px;
 }
 
 .submit-button {
-    height: 30px;
+    height: 32px;
     width: 80px;
     border: none;
     background-color: grey;
@@ -100,10 +93,43 @@ tbody tr:nth-of-type(even) {
 
 .course-table {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 800px;
+    gap: 10px;
 }
 
 thead {
     background-color: rgb(165, 230, 230);
     border-bottom: 2px solid black;
 }
+
+.ad-button {
+    height: 35px;
+    width: 160px;
+    background-color: rgb(165, 165, 165);
+    cursor: pointer;
+    border: none;
+    margin-right: none;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.selected-button {
+    background-color: grey;
+    font-weight: 500;
+    color: white;
+    
+}
+
+.add-selected {
+    background-color: rgb(47, 165, 47);
+    font-weight: 500;
+    color: white;
+}
+
+.drop-selected {
+    background-color: rgb(184, 50, 50);
+    font-weight: 500;
+    color: white;
+}
+
+

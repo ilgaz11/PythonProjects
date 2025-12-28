@@ -63,6 +63,7 @@ class Student:
 		self.grades = {}
 		self.avg = 0
 		self.school = sch
+		self.avg_grades()
 		
 	def enter_grade(self, course_code: str, grade):
 		if course_code not in self.grades:
@@ -84,7 +85,7 @@ class Student:
 			if course.code == code:
 				if self not in course.students:
 					course.students.append(self)
-					self.courses.append(course.code)
+				self.courses.append(course.code)
 
 				if code not in self.grades:
 					self.grades[code] = []
@@ -105,6 +106,23 @@ class Student:
 			return
 		for code in curriculums[cur]:
 			self.enroll_class(code)
+
+	def drop_class(self, code: str):
+		for course_code in self.courses:
+			if course_code.strip() == code:
+				self.courses.remove(code)
+				if code in self.grades:
+					del self.grades[code]
+				course = find_course(code)
+				if self in course.students:
+					course.students.remove(self)
+
+	def avg_grades(self):
+		avg_grades = {}
+		for code, grades in self.grades.items():
+			avg = "N/A" if len(grades) == 0 else str(round(sum(grades) / len(grades), 1))
+			avg_grades[code] = avg
+		return avg_grades
 
 	def __str__(self):
 		return f"Name: {self.name:8} |  ID: {self.id} "
@@ -150,6 +168,12 @@ for i, st in enumerate(students):
 		st.enroll_class('MATH-262')
 		#print(st.grades)
 
+st1 = student_list[0]
+st1.grades["MATH-262"] += [90, 80, 75]
+# print(st1.avg_grades)
+
+
+
 
 #sch.show_courses()
 
@@ -178,11 +202,24 @@ def find_id(id: str):
 			return st
 	return None
 
+def find_course(code: str):
+	for crse in course_list:
+		if crse.code == code:
+			return crse
+	return None
+
 
 
 
 if __name__ == "__main__":
-	main()
+	#main()
+	print(st1.courses)
+	print(st1.grades)
+	st1.drop_class('MATH-263')
+	print(st1.courses)
+	print(st1.grades)
+	c1 = find_course("FACC-100")
+	print(c1.students)
 
 			
 
