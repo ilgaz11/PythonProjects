@@ -5,7 +5,7 @@ To-Do:
 """
 
 
-def initialize_school(filename: str, lst1: list, lst2: list, dict1: dict):
+def initialize_school(filename: str, lst1: list, lst2: list, lst3: list, dict1: dict):
 	with open(filename, "r") as file:
 		data = file.read()
 		for line in data.split('\n'):
@@ -28,6 +28,10 @@ def initialize_school(filename: str, lst1: list, lst2: list, dict1: dict):
 				cur_name = s_info[1].strip()
 				cur_courses = [course.strip() for course in s_info[2].split(";")]
 				dict1[cur_name] = cur_courses
+			elif s_info[0] == "Staff":
+				f_name, f_id, f_password = s_info[1].strip(), s_info[2].strip(), s_info[3].strip()
+				f = Staff(f_name, f_id, f_password)
+				lst3.append(f)
 
 
 
@@ -60,18 +64,18 @@ class Student:
 		self.id = id
 		self.age = age
 		self.courses = []
-		self.grades = {}
+		self.course_data = {}
 		self.avg = 0
 		self.school = sch
 		self.avg_grades()
 		
 	def enter_grade(self, course_code: str, grade):
-		if course_code not in self.grades:
+		if course_code not in self.course_data:
 			return None
-		self.grades[course_code].append(grade)
+		self.course_data[course_code][0].append(grade)
 
 	def course_avg(self, course_code):
-		course_grades = self.grades[course_code]
+		course_grades = self.course_data[course_code]
 		if len(course_grades) == 0:
 			return 0
 		avg = sum(course_grades) / len(course_grades)
@@ -87,8 +91,8 @@ class Student:
 					course.students.append(self)
 				self.courses.append(course.code)
 
-				if code not in self.grades:
-					self.grades[code] = []
+				if code not in self.course_data:
+					self.course_data[code] = [[], course.credits]
 				return True
 		return False
 			
@@ -111,17 +115,19 @@ class Student:
 		for course_code in self.courses:
 			if course_code.strip() == code:
 				self.courses.remove(code)
-				if code in self.grades:
-					del self.grades[code]
+				if code in self.course_data:
+					del self.course_data[code]
 				course = find_course(code)
 				if self in course.students:
 					course.students.remove(self)
 
 	def avg_grades(self):
 		avg_grades = {}
-		for code, grades in self.grades.items():
+		for code, data in self.course_data.items():
+			grades = data[0]
+			credits = data[1]
 			avg = "N/A" if len(grades) == 0 else str(round(sum(grades) / len(grades), 1))
-			avg_grades[code] = avg
+			avg_grades[code] = [avg, credits]
 		return avg_grades
 
 	def __str__(self):
@@ -142,12 +148,20 @@ class Course:
 
 	def __str__(self):
 		return f"{self.code:10}| {self.credits} credits"
+	
+class Staff:
+	def __init__(self, name: str, id: str, password: str):
+		self.name = name
+		self.id = id
+		self.password = password
 
 
 
 student_list = []
 course_list = []
+staff_list = []
 curriculums = {}
+
 
 sem_cur = ["MATH-262", "MATH-263", "MATH-240", "COMP-202"]
 
@@ -155,7 +169,7 @@ sem_cur = ["MATH-262", "MATH-263", "MATH-240", "COMP-202"]
 ####these are needed to set up the school
 sch = School()
 
-initialize_school("data.csv", student_list, course_list, curriculums)
+initialize_school("data.csv", student_list, course_list, staff_list, curriculums)
 ###
 
 
@@ -169,7 +183,7 @@ for i, st in enumerate(students):
 		#print(st.grades)
 
 st1 = student_list[0]
-st1.grades["MATH-262"] += [90, 80, 75]
+st1.course_data["MATH-262"][0] += [90, 80, 75]
 # print(st1.avg_grades)
 
 
@@ -208,18 +222,27 @@ def find_course(code: str):
 			return crse
 	return None
 
+def verify_staff(id: str, password: str):
+	for staff in staff_list:
+		if staff.id == id:
+			if staff.password == password.strip():
+				return staff
+			#right id, wrong password
+	return None
+
 
 
 
 if __name__ == "__main__":
 	#main()
 	print(st1.courses)
-	print(st1.grades)
-	st1.drop_class('MATH-263')
-	print(st1.courses)
-	print(st1.grades)
-	c1 = find_course("FACC-100")
-	print(c1.students)
+	print(st1.course_data)
+	# st1.drop_class('MATH-263')
+	# print(st1.courses)
+	# print(st1.grades)
+	# c1 = find_course("FACC-100")
+	# print(c1.students)
+	
 
 			
 

@@ -49,8 +49,8 @@
                         {% for code, grade in grades.items() %}
                         <tr>
                             <td>{{ code }}</td>
-                            <td></td>
-                            <td>{{ grade }}</td>
+                            <td>{{ grade[1] }}</td>
+                            <td>{{ grade[0] }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

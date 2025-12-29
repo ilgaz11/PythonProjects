@@ -28,8 +28,9 @@ staffButtonEl.addEventListener('click', () => {
         stButtonEl.classList.remove('selected-button');
         stuLoginEl.innerHTML = '';
 
-        let staffHTML = `<p>Enter Staff ID</p><form action="/submit" method="POST">
-                <input class='input-box' type="text" placeholder="ID" name="student-id">
+        let staffHTML = `<p>Enter Staff ID</p><form action="/staff" method="POST">
+                <input class='input-box' type="text" placeholder="ID" name="staff-id"><br>
+                <input class='input-box' type="password" placeholder="Password" name="staff-pass">
                 <button class='submit-button' type="submit">Submit</button>
             </form>`;
         stuLoginEl.innerHTML = staffHTML;

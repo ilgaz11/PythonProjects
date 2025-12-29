@@ -18,6 +18,9 @@ Student, Adam, 0001, 20
 Student, Patrick, 9201, 24
 Student, Sandy, 8121, 18
 
+Staff, Ilgaz, 0011, hello
+Staff, Gustavious, 1001, third
+
 Course, MATH-240, 3
 Course, MATH-262, 3
 Course, MATH-263, 3

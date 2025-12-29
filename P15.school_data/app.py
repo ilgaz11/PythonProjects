@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, redirect, session
-from school_data import find_id
+from school_data import find_id, verify_staff
 
 app = Flask(__name__)
 
@@ -44,12 +44,12 @@ def add_course():
     #print(choice)
     st_id = session["id"]
     st = find_id(st_id)
-    print(st.grades)
+    print(st.course_data)
     if choice == "add":
         st.enroll_class(course_code)
     elif choice == "delete":
         st.drop_class(course_code)
-    print(st.grades)
+    print(st.course_data)
     # print(st.courses)
     # print(st.grades)
     # print(session["data"])
@@ -57,6 +57,15 @@ def add_course():
     # print(session["data"])
     # print("3")
     return redirect(url_for("submit"))
+
+@app.route("/staff", methods=["POST", "GET"])
+def staff_page():
+    staff_id = request.form.get("staff-id")
+    staff_password = request.form.get("staff-pass")
+    staff = verify_staff(staff_id, staff_password)
+    if not staff:
+        return render_template("index.html")
+    return render_template("staff.html", name=staff.name, id=staff.id)
 
 
 
