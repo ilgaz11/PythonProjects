@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, redirect, session
-from school_data import find_id, verify_staff
+from school_data import find_id, verify_staff, course_list
 
 app = Flask(__name__)
 
@@ -25,14 +25,14 @@ def submit():
             return render_template("index.html")
         avg_grades = student.avg_grades()
         session["id"] = student_id
-        return render_template("result.html", name=student.name, id=student.id, age=student.age, grades=avg_grades)
+        return render_template("result.html", name=student.name, id=student.id, age=student.age, grades=avg_grades, courses=course_list)
     
     #print("4")
     stud = find_id(session['id'])
     avg_grades = stud.avg_grades()
     # print(stud.grades)
     # print(session["data"])
-    return render_template("result.html", name=stud.name, id=stud.id, age=stud.age, grades=avg_grades)
+    return render_template("result.html", name=stud.name, id=stud.id, age=stud.age, grades=avg_grades, courses=course_list)
 
 
 

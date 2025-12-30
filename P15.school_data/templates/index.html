@@ -9,13 +9,27 @@
 
     
         <div class="header">
-        <h1>School</h1>
+        <h1>McGill University</h1>
         </div>
     
+        <div class="main-grid">
+            <div></div>
+            <div class="login-window main-window">
+                <div class="login-content">
+                    <h2 class="window-header">Account Login</h2>
+                    <button class="choice-button js-student-button">Student</button>
+                    <button class="choice-button js-staff-button">Staff</button>
+                    <div class="js-login"></div>
+                </div>
 
-        <button class="choice-button js-student-button">Student</button>
-        <button class="choice-button js-staff-button">Staff</button>
-        <div class="js-login"></div>
+            </div>
+            <div class="main-window">
+                <h2>Announcements</h2>
+            </div>
+            
+
+        </div>
+        
 
         <script src="{{ url_for('static', filename='script.js') }}"></script>
     </body>
