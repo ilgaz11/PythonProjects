@@ -22,15 +22,19 @@
                 <tbody>
                     <tr>
                         <td>Name</td>
-                        <td>{{ name }}</td>
+                        <td>{{ s_data.name }}</td>
                     </tr>
                     <tr>
                         <td>Age</td>
-                        <td>{{ age }}</td>
+                        <td>{{ s_data.age }}</td>
                     </tr>
                     <tr>
                         <td>Student ID</td>
-                        <td>{{ id }}</td>
+                        <td>{{ s_data.id }}</td>
+                    </tr>
+                    <tr>
+                        <td>Program</td>
+                        <td>{{ s_data.program }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -67,9 +71,7 @@
                         <p class="not-found-info"></p>
                     </form>
                 </div>
-            </div>
-            
-            <button class="back-button" onclick="window.location.href='/'">Go Back</button>
+            </div>         
 
             <datalist id="course-list">
                 {% for course in courses %}
@@ -79,6 +81,7 @@
 
         </div>
     </div>
+    <button class="back-button" onclick="window.location.href='/'">Go Back</button>
 
 
     <script src="{{ url_for('static', filename='student.js')}}"></script>

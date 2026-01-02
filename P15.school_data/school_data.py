@@ -17,11 +17,12 @@ def initialize_school(filename: str, lst1: list, lst2: list, lst3: list, dict1: 
 
 			if s_info[0] == "Student":
 				name, id, age = s_info[1].strip(), s_info[2].strip(), s_info[3].strip()
-				s = Student(name, id, age)
+				program, s_password = s_info[4].strip(), s_info[5].strip()
+				s = Student(name, id, age, s_password, program)
 				lst1.append(s)
 			elif s_info[0] == "Course":
-				code, credits = s_info[1].strip(), s_info[2].strip()
-				c = Course(code, credits)
+				code, credits, name = s_info[1].strip(), s_info[2].strip(), s_info[3].strip()
+				c = Course(code, credits, name)
 				if c not in lst2:
 					lst2.append(c)
 			elif s_info[0] == "Curriculum":
@@ -59,10 +60,12 @@ class School:
 
 
 class Student:
-	def __init__(self, name: str, id: str, age: int, school=None):
+	def __init__(self, name: str, id: str, age: int, password:str, program=None, school=None):
 		self.name = name
 		self.id = id
 		self.age = age
+		self.program = program
+		self.password = password
 		self.courses = []
 		self.course_data = {}
 		self.avg = 0
@@ -85,10 +88,13 @@ class Student:
 		pass
 
 	def enroll_class(self, code: str):
+		if len(self.courses) >= 7:
+			return
 		for course in self.school.courses:
 			if course.code == code:
 				if self not in course.students:
 					course.students.append(self)
+					course.update_count()
 				self.courses.append(course.code)
 
 				if code not in self.course_data:
@@ -120,6 +126,7 @@ class Student:
 				course = find_course(code)
 				if self in course.students:
 					course.students.remove(self)
+					course.update_count()
 
 	def avg_grades(self):
 		avg_grades = {}
@@ -136,15 +143,20 @@ class Student:
 				
 
 class Course:
-	def __init__(self, code: str, credits: int):
+	def __init__(self, code: str, credits: int, name: str):
 		self.code = code.strip()
 		self.credits = credits
 		self.students = []
 		self.school = sch
+		self.name = name
+		self.enrolled = len(self.students)
 		#self.add_course()
 
 	def add_course(self):
 		self.school.courses.append(self)
+
+	def update_count(self):
+		self.enrolled = len(self.students)
 
 	def __str__(self):
 		return f"{self.code:10}| {self.credits} credits"
@@ -229,6 +241,9 @@ def verify_staff(id: str, password: str):
 				return staff
 			#right id, wrong password
 	return None
+
+def verify_student(student: Student, password: str):
+	return student.password == password.strip()
 
 
 

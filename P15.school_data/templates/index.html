@@ -19,7 +19,17 @@
                     <h2 class="window-header">Account Login</h2>
                     <button class="choice-button js-student-button">Student</button>
                     <button class="choice-button js-staff-button">Staff</button>
-                    <div class="js-login"></div>
+
+                    {% with messages = get_flashed_messages(with_categories=True) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="error-text {{ category}}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    
+                    <div class="js-login login-container"></div>
+                    
                 </div>
 
             </div>
