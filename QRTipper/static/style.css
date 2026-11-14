@@ -1,0 +1,124 @@
+:root {
+  --bg: #fafaf7;
+  --fg: #1a1a1a;
+  --muted: #55555a;
+  --card: #ffffff;
+  --border: #8a8a90;
+  --accent: #1f4fd8;
+  --accent-fg: #ffffff;
+  --error-bg: #fde8e8;
+  --error-fg: #8a1111;
+  --radius: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121214;
+    --fg: #f2f2f2;
+    --muted: #b4b4ba;
+    --card: #1c1c20;
+    --border: #7c7c84;
+    --accent: #7ea2ff;
+    --accent-fg: #0b1020;
+    --error-bg: #3a1616;
+    --error-fg: #ffb4b4;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 18px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+main { max-width: 480px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { font-size: 1.8rem; margin: 8px 0 4px; }
+.lead { margin: 0 0 20px; color: var(--muted); }
+
+fieldset { border: 0; padding: 0; margin: 0 0 24px; }
+legend { font-weight: 650; font-size: 1.1rem; padding: 0; margin-bottom: 10px; }
+
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.amounts { grid-template-columns: repeat(3, 1fr); }
+
+.choice { position: relative; }
+
+.choice input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.choice label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  padding: 10px;
+  text-align: center;
+  font-weight: 600;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.choice input:checked + label {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+.choice input:focus-visible + label { outline: 3px solid var(--fg); outline-offset: 3px; }
+
+.custom { margin-top: 14px; }
+.custom label { display: block; font-size: 0.95rem; color: var(--muted); margin-bottom: 6px; }
+
+.custom input {
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 14px;
+  font: inherit;
+  color: var(--fg);
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.custom input:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
+
+.pay {
+  display: block;
+  width: 100%;
+  min-height: 60px;
+  padding: 14px;
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  color: var(--accent-fg);
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.pay:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+
+.note { font-size: 0.9rem; color: var(--muted); text-align: center; margin-top: 12px; }
+
+.error {
+  background: var(--error-bg);
+  color: var(--error-fg);
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  margin: 0 0 20px;
+}
+
+.link { margin-top: 24px; }

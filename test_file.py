@@ -37,6 +37,27 @@ def print_list(lst):
         for item in sublist:
             print(item)
 
+#does not work
+def binary_search(nums: list, target: int):
+        index = len(nums) // 2
+        final_index = 0
+        while nums[index] != target:
+            if nums[index] < target:
+                nums = nums[index: ]
+                final_index += index
+            else:
+                nums = nums[: index]
+            index = len(nums) // 2
+            #print(index)
+        return final_index
+
+
+print(binary_search([0,1,2,3,4,5,6,7], 2))
+lst = [1, 2, 3, 4]
+k = lst.index(2)
+print(k)
+
+
 
 
 

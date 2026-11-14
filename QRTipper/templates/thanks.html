@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thank you | {{ business_name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <h1>Thank you!</h1>
+    <p class="lead">Your tip for {{ recipient_name }} went through.</p>
+    <p class="note">Your receipt will be sent by email if you provided one at checkout.</p>
+    <a class="pay link" href="{{ url_for('index') }}">Leave another tip</a>
+  </main>
+</body>
+</html>

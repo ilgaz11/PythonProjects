@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ business_name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <h1>{{ business_name }}</h1>
+    <p class="lead">Leave a tip. It takes a few seconds.</p>
+
+    {% if error == "recipient" %}
+      <p class="error" role="alert">Please choose who the tip is for.</p>
+    {% elif error == "amount" %}
+      <p class="error" role="alert">Please choose an amount, or enter one between ${{ min_custom }} and ${{ max_custom }}.</p>
+    {% elif error == "stripe" %}
+      <p class="error" role="alert">Something went wrong starting the payment. You haven't been charged. Please try again.</p>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('checkout') }}">
+
+      <fieldset>
+        <legend>Who is this tip for?</legend>
+        <div class="choices">
+          {% for rid, name in recipients.items() %}
+            <div class="choice">
+              <input type="radio" id="to-{{ rid }}" name="recipient" value="{{ rid }}"
+                     {% if rid == preselected %}checked{% endif %} required>
+              <label for="to-{{ rid }}">{{ name }}</label>
+            </div>
+          {% endfor %}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>How much?</legend>
+        <div class="choices amounts">
+          {% for amt in presets %}
+            <div class="choice">
+              <input type="radio" id="amt-{{ amt }}" name="amount" value="{{ amt }}"
+                     {% if loop.index == 2 %}checked{% endif %}>
+              <label for="amt-{{ amt }}">${{ amt }}</label>
+            </div>
+          {% endfor %}
+          <div class="choice">
+            <input type="radio" id="amt-other" name="amount" value="other">
+            <label for="amt-other">Other</label>
+          </div>
+        </div>
+
+        <div class="custom">
+          <label for="custom_amount">Other amount in Canadian dollars (${{ min_custom }} to ${{ max_custom }})</label>
+          <input type="text" id="custom_amount" name="custom_amount" inputmode="decimal"
+                 autocomplete="off" placeholder="e.g. 7.50">
+        </div>
+      </fieldset>
+
+      <button type="submit" class="pay">Continue to payment</button>
+      <p class="note">You'll pay securely with Apple Pay, Google Pay, or a card. Amounts are in CAD.</p>
+    </form>
+  </main>
+
+  <script>
+    (function () {
+      var custom = document.getElementById("custom_amount");
+      var other = document.getElementById("amt-other");
+      if (custom && other) {
+        custom.addEventListener("input", function () { other.checked = true; });
+      }
+    })();
+  </script>
+</body>
+</html>
