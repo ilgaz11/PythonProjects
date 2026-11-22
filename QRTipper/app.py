@@ -23,7 +23,7 @@ PRESET_AMOUNTS = [3, 5, 10, 20]  # whole Canadian dollars
 MIN_CUSTOM = 2
 MAX_CUSTOM = 200
 CURRENCY = "cad"
-BUSINESS_NAME = os.environ.get("BUSINESS_NAME", "Tip jar")
+BUSINESS_NAME = os.environ.get("BUSINESS_NAME", "Tip Jar")
 
 
 def amount_to_cents(form):
@@ -121,4 +121,4 @@ def thanks():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(host="0.0.0.0", debug=True, port=5001)

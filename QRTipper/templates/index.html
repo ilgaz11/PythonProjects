@@ -45,12 +45,12 @@
             </div>
           {% endfor %}
           <div class="choice">
-            <input type="radio" id="amt-other" name="amount" value="other">
+            <input type="radio" id="amt-other" name="amount" value="other" aria-controls="custom-wrap">
             <label for="amt-other">Other</label>
           </div>
         </div>
 
-        <div class="custom">
+        <div class="custom" id="custom-wrap">
           <label for="custom_amount">Other amount in Canadian dollars (${{ min_custom }} to ${{ max_custom }})</label>
           <input type="text" id="custom_amount" name="custom_amount" inputmode="decimal"
                  autocomplete="off" placeholder="e.g. 7.50">
@@ -62,14 +62,27 @@
     </form>
   </main>
 
-  <script>
-    (function () {
-      var custom = document.getElementById("custom_amount");
-      var other = document.getElementById("amt-other");
-      if (custom && other) {
-        custom.addEventListener("input", function () { other.checked = true; });
-      }
-    })();
-  </script>
+<script>
+  // Show the custom amount box only while "Other" is selected.
+  // Without JavaScript the box simply stays visible, so the page still works.
+  (function () {
+    var wrap = document.getElementById("custom-wrap");
+    var custom = document.getElementById("custom_amount");
+    var radios = document.querySelectorAll('input[name="amount"]');
+    if (!wrap || !custom || !radios.length) return;
+
+    function update(focusIt) {
+      var otherSelected = document.getElementById("amt-other").checked;
+      wrap.hidden = !otherSelected;
+      custom.required = otherSelected;
+      if (otherSelected && focusIt) custom.focus();
+    }
+
+    radios.forEach(function (r) {
+      r.addEventListener("change", function () { update(true); });
+    });
+    update(false);
+  })();
+</script>
 </body>
 </html>
